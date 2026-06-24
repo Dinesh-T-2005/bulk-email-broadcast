@@ -1,0 +1,1863 @@
+.bg-light-purple {
+  background-color: #f3e8ff !important;
+}
+.bg-light-white{
+  background-color: #ffffff !important;
+}
+
+.bg-light-teal {
+  background-color: #d2f4ea !important;
+}
+
+.bg-light-pink {
+  background-color: #ffe5ec !important;
+}
+
+.bg-light-orange {
+  background-color: #ffeacc !important;
+}
+
+.bg-light-lime {
+  background-color: #f0ffe5 !important;
+}
+
+.bg-light-blue {
+  background-color: #e0f0ff !important;
+}
+
+.bg-light-yellow {
+  background-color: #fff9db !important;
+}
+
+.bg-light-red {
+  background-color: #ffe3e3 !important;
+}
+
+.bg-light-green {
+  background-color: #e6ffed !important;
+}
+
+.bg-light-cyan {
+  background-color: #e0f7fa !important;
+}
+
+.bg-light-brown {
+  background-color: #f3e9e3 !important; /* Light mode background */
+}
+
+@media (prefers-color-scheme: dark) {
+  .bg-light-brown {
+    background-color: #e3c9be !important; /* Dark mode background */
+  }
+}
+
+
+.bg-light-indigo {
+  background-color: #e0e7ff !important;
+}
+
+.bg-light-gray {
+  background-color: #f8f9fa !important;
+}
+
+.bg-light-gold {
+  background-color: #fff7d1 !important;
+}
+
+.bg-light-sky {
+  background-color: #d6f0ff !important;
+}
+
+.bg-light-beige {
+  background-color: #fdf5e6 !important;
+}
+
+.cardWithShadow {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  transition: box-shadow 0.3s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  mat-icon {
+    font-size: 18px;
+    vertical-align: middle;
+  }
+
+  .border-top {
+    border-top: 1px solid #eee;
+  }
+}
+
+
+::ng-deep .mat-icon-button {
+  padding: 4px !important;
+}
+.mat-menu-panel {
+  z-index: 10000 !important;
+}
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+}
+
+.modal-card {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 400px;
+  max-width: 90%;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-title {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #333;
+}
+
+.dropdown-field {
+  width: 100%;
+  border-radius: 8px;
+
+  ::ng-deep .mat-form-field-outline {
+    border-radius: 8px;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0; left: 0;
+  right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+}
+
+.modal-card {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 24px;
+  width: 400px;
+  z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// new css
+
+
+.btn {
+  appearance: none;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  padding: 14px 22px;
+  border-radius: 12px;
+  font-weight: 600; /* 650 is invalid, using 600 */
+  font-size: 16px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(74, 20, 140, 0.25);
+  transition: transform 0.06s ease, box-shadow 0.2s ease;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 3px solid #C4A1FF;
+  outline-offset: 2px;
+}
+
+.btn.secondary {
+  background: #e9e6f7;
+  color: #3a2f55;
+  box-shadow: none;
+}
+
+/* Modal Overlay */
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  display: grid;
+  place-items: center;
+  z-index: 9999;
+  padding: 24px;
+}
+
+/* Modal Box */
+// .modal {
+//   width: min(1121px, 96vw);
+//   height: min(85vh, 1121px);
+//   background: var(--card-bg);
+//   border-radius: var(--radius);
+//   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+//   overflow: hidden;
+//   display: grid;
+//   grid-template-rows: auto 1fr auto;
+//   margin-top: 60px;
+//   margin-left: 300px;
+//   border-radius: 10px;
+// }
+
+/* Modal Header */
+.modal__head {
+  padding: 22px 28px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #faf7ff, #fff 40%);
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 22px;
+}
+
+.modal__close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+}
+
+.modal__close:focus-visible {
+  outline: 3px solid #C4A1FF;
+  outline-offset: 2px;
+}
+
+/* Modal Body & Footer */
+.modal__body {
+  padding: 24px 28px;
+  overflow: auto;
+    background-color: #fff;
+}
+
+.modal__foot {
+  padding: 18px 28px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+   background-color: white;
+}
+
+/* Form Fields */
+.field {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 18px;
+
+}
+
+.label {
+  font-weight: 600;
+}
+
+
+
+
+/* Match input style for select */
+select.input {
+  width: 20%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  font-size: 16px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  appearance: none; /* Remove default browser arrow */
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23333' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/ %3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Focus State */
+select.input:focus {
+  outline: none;
+  border-color: var(--accent, #f6f5f7);
+  box-shadow: 0 0 0 4px rgba(74, 20, 140, 0.15);
+}
+
+/* Option styling */
+select.input option {
+  padding: 10px;
+  font-size: 16px;
+}
+
+
+// table
+/* Container */
+.candidate-table-container {
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+/* Table Styling */
+.candidate-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-size: 14px;
+}
+
+.candidate-table th,
+.candidate-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.candidate-table th:first-child,
+.candidate-table td:first-child {
+  text-align: center;
+  width: 50px;
+}
+
+/* Header */
+.candidate-table thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.candidate-table th {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* Rows */
+.candidate-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.candidate-table tbody tr:hover {
+  background: #f3f4f6;
+}
+
+/* Checkbox Styling */
+.candidate-table input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #2563eb; /* Modern blue accent */
+}
+
+
+
+
+.custom-select {
+  position: relative;
+  width: 250px;
+  cursor: pointer;
+}
+
+.dropdown-list {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #ccc;
+  max-height: 150px;
+  overflow-y: auto;
+  width: 100%;
+  z-index: 1000;
+}
+
+.dropdown-list li {
+  padding: 8px;
+  cursor: pointer;
+}
+
+.dropdown-list li:hover {
+  background: #f1f1f1;
+}
+
+mat-form-field.field {
+  width: 20%; /* Same as your select width */
+  font-size: 16px;
+}
+
+.mat-select-panel {
+  max-height: 200px; /* Scrollable dropdown */
+  overflow-y: auto;
+}
+
+
+
+
+::ng-deep .custom-panel {
+  max-height: 200px !important; /* Limit height */
+  overflow-y: auto !important;  /* Enable scroll */
+}
+
+
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #1976d2;
+}
+
+
+.mail-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 700px;
+  margin: auto;
+}
+
+.full {
+  width: 100%;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================
+   MODAL EMAIL BROADCAST - ENHANCED STYLES
+   ========================================== */
+
+/* ---------------------------
+   Modal Overlay
+---------------------------- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* ---------------------------
+   Modal Box
+---------------------------- */
+.modal-emailbroadcast {
+    background: #ffffff;
+    width: 888px;
+    margin-top: 0px;
+    margin-left: 328px;
+    max-width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    animation: scaleIn 0.3s ease-in-out;
+}
+
+/* ---------------------------
+   Modal Header
+---------------------------- */
+.modal__head {
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: white;
+  padding: 1.25rem 1.75rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+}
+
+.modal__title {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.modal__close {
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: white;
+  cursor: pointer;
+  padding: 0;
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease-in-out;
+  border-radius: 6px;
+}
+
+.modal__close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: rotate(90deg);
+}
+
+.modal__close:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ---------------------------
+   Modal Body
+---------------------------- */
+.modal__body {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+  width: 100%;
+}
+
+.modal__body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal__body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal__body::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.modal__body::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
+/* ---------------------------
+   Modal Footer
+---------------------------- */
+.modal__foot {
+  padding: 1.25rem 1.75rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #e8e8e8;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  background: #fafafa;
+}
+
+/* ---------------------------
+   Form Field Container
+---------------------------- */
+.form-field-wrapper {
+  margin-bottom: 1.5rem;
+}
+
+.form-field-wrapper:last-child {
+  margin-bottom: 0;
+}
+
+/* ---------------------------
+   Form Labels
+---------------------------- */
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ---------------------------
+   Filter Section
+---------------------------- */
+.filter-section {
+  background: linear-gradient(135deg, #f5f8fc 0%, #e8f1f9 100%);
+  border: 1px solid #d4e3f0;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 200px;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1565c0;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.mail-status-select {
+  padding: 0.75rem 1rem;
+  border: 2px solid #d4e3f0;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #333;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231976d2' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.mail-status-select:hover {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.08);
+  background-color: #f8fbff;
+}
+
+.mail-status-select:focus {
+  outline: none;
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.12);
+  background-color: #f8fbff;
+}
+
+/* ---------------------------
+   Candidate Table Container
+---------------------------- */
+.candidate-table-container {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  background: #ffffff;
+}
+
+.candidate-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  font-size: 0.9375rem;
+}
+
+.candidate-table thead {
+  background-color: #f5f5f5;
+}
+
+.candidate-table th {
+  color: #333;
+  font-weight: 700;
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 2px solid #e0e0e0;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  background: linear-gradient(to right, #f5f5f5, #f0f0f0);
+}
+
+.candidate-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.9375rem;
+  color: #444;
+}
+
+.candidate-table tbody tr:hover {
+  background-color: #fafbff;
+}
+
+.candidate-table tbody tr:active {
+  background-color: #f0f5ff;
+}
+
+.candidate-table input[type="checkbox"] {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: #1976d2;
+  border-radius: 3px;
+  transition: all 0.2s ease-in-out;
+}
+
+.candidate-table input[type="checkbox"]:hover {
+  transform: scale(1.1);
+}
+
+.candidate-table input[type="checkbox"]:checked {
+  background-color: #1976d2;
+}
+
+/* ---------------------------
+   Status Pills
+---------------------------- */
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.status-pill-sent {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.status-pill-not-sent {
+  background-color: #ffe0b2;
+  color: #e65100;
+  border: 1px solid #ffccbc;
+}
+
+.status-pill::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.status-pill-sent::before {
+  background-color: #2e7d32;
+}
+
+.status-pill-not-sent::before {
+  background-color: #e65100;
+}
+
+/* ---------------------------
+   Material Form Fields
+---------------------------- */
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.full-width {
+  width: 100%;
+}
+
+::ng-deep .mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-chip {
+  background-color: #e3f2fd !important;
+  color: #1565c0 !important;
+  font-weight: 500;
+  border: 1px solid #bbdefb !important;
+}
+
+.mat-mdc-chip:hover {
+  background-color: #bbdefb !important;
+}
+
+mat-chip-row button {
+  color: #1565c0 !important;
+}
+
+/* ---------------------------
+   Toolbar Styling
+---------------------------- */
+mat-toolbar {
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  padding: 0 1rem !important;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.15);
+}
+
+mat-toolbar span {
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.gap-4 {
+  gap: 1.5rem;
+}
+
+/* ---------------------------
+   Buttons
+---------------------------- */
+.btn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.btn.secondary {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 2px solid #ddd;
+}
+
+.btn.secondary:hover {
+  background-color: #e9e9e9;
+  border-color: #bbb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.btn.secondary:active {
+  background-color: #ddd;
+  transform: scale(0.98);
+}
+
+.btn.secondary:disabled {
+  background-color: #f5f5f5;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.5;
+  border-color: #e0e0e0;
+}
+
+button[mat-flat-button] {
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  border-radius: 6px;
+}
+
+button[mat-flat-button][color="primary"] {
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%) !important;
+}
+
+button[mat-flat-button][color="primary"]:hover {
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;
+}
+
+button[mat-flat-button]:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button[mat-icon-button] {
+  color: rgb(0, 0, 0);
+  transition: all 0.2s ease-in-out;
+}
+
+button[mat-icon-button]:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+}
+
+/* ---------------------------
+   No Data Message
+---------------------------- */
+.no-data {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #666;
+  margin-top: 1.5rem;
+  font-size: 0.9375rem;
+  padding: 1.5rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  border-left: 4px solid #1976d2;
+}
+
+.no-data mat-icon {
+  font-size: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  color: #1976d2;
+}
+
+/* ---------------------------
+   Progress Section
+---------------------------- */
+.progress-wrap {
+  margin: 0;
+  padding: 1.5rem 2rem;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.progress-bar-container {
+  margin-bottom: 1rem;
+}
+
+mat-progress-bar {
+  border-radius: 4px;
+  height: 6px;
+}
+
+.progress-text {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.progress-text span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.progress-text strong {
+  color: #1976d2;
+  font-size: 1.25rem;
+}
+
+.progress-log {
+  margin-top: 1rem;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 0.875rem;
+  background-color: #ffffff;
+}
+
+.progress-log > div {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.progress-log > div:last-child {
+  border-bottom: none;
+}
+
+.progress-log .ok mat-icon {
+  color: #2e7d32;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.progress-log .err mat-icon {
+  color: #d32f2f;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.progress-log .msg {
+  flex: 1;
+  min-width: 0;
+}
+
+.progress-log .line1 {
+  font-weight: 600;
+  color: #333;
+  word-break: break-word;
+  font-size: 0.9375rem;
+}
+
+.progress-log .line2 {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 0.25rem;
+  word-break: break-word;
+}
+
+.progress-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------------------------
+   Animations
+---------------------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.92);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ---------------------------
+   Responsive Design
+---------------------------- */
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .modal__head,
+  .modal__body,
+  .modal__foot {
+    padding: 1.25rem;
+  }
+
+  .modal__title {
+    font-size: 1.1rem;
+  }
+
+  .filter-section {
+    padding: 1rem;
+  }
+
+  .filter-row {
+    gap: 1rem;
+  }
+
+  .filter-group {
+    min-width: 100%;
+  }
+
+  .candidate-table th,
+  .candidate-table td {
+    padding: 10px;
+    font-size: 0.875rem;
+  }
+
+  .progress-text {
+    gap: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .modal__foot {
+    flex-direction: column-reverse;
+  }
+
+  .modal__foot button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    width: 100%;
+    border-radius: 0;
+    max-height: 100vh;
+  }
+
+  .modal__head,
+  .modal__body,
+  .modal__foot {
+    padding: 1rem;
+  }
+
+  .modal__title {
+    font-size: 1rem;
+    font-weight: 600;
+  }
+
+  .candidate-table th,
+  .candidate-table td {
+    padding: 8px;
+    font-size: 0.8125rem;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .filter-group {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .mail-status-select {
+    width: 100%;
+  }
+
+  .progress-text {
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .modal__body {
+    padding: 1rem;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+// /* ---------------------------
+//    Modal Overlay
+// ---------------------------- */
+// .modal-overlay {
+//   position: fixed;
+//   inset: 0;
+//   background: rgba(0, 0, 0, 0.55);
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   z-index: 2000;
+//   padding: 1rem;
+//   animation: fadeIn 0.3s ease-in-out;
+// }
+
+// /* ---------------------------
+//    Modal Box
+// ---------------------------- */
+// .modal {
+//   background: #fff;
+//   width: 900px;
+//   max-width: 100%;
+//   max-height: 90vh;
+//   display: flex;
+//   flex-direction: column;
+//   border-radius: 12px;
+//   overflow: hidden;
+//   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+//   animation: scaleIn 0.3s ease-in-out;
+// }
+
+// /* ---------------------------
+//    Modal Header
+// ---------------------------- */
+// .modal__head {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   background: #1976d2; /* Material primary */
+//   color: white;
+//   padding: 1rem 1.5rem;
+// }
+
+// .modal__title {
+//   margin: 0;
+//   font-size: 1.2rem;
+//   font-weight: 600;
+// }
+
+// .modal__close {
+//   background: transparent;
+//   border: none;
+//   font-size: 1.5rem;
+//   color: white;
+//   cursor: pointer;
+//   transition: transform 0.2s ease-in-out;
+
+//   &:hover {
+//     transform: rotate(90deg);
+//   }
+// }
+
+// /* ---------------------------
+//    Modal Body
+// ---------------------------- */
+// .modal__body {
+//   padding: 1.5rem;
+//   overflow-y: auto;
+//   flex: 1;
+// }
+
+// /* ---------------------------
+//    Candidate Table
+// ---------------------------- */
+// .candidate-table-container {
+//   border: 1px solid #e0e0e0;
+//   border-radius: 8px;
+//   overflow: hidden;
+//   margin-top: 1rem;
+// }
+
+// .candidate-table {
+//   width: 100%;
+//   border-collapse: collapse;
+
+//   th {
+//     background: #f5f5f5;
+//     color: #333;
+//     font-weight: 600;
+//     text-align: left;
+//     padding: 12px;
+//     border-bottom: 1px solid #e0e0e0;
+//   }
+
+//   td {
+//     padding: 12px;
+//     border-bottom: 1px solid #f0f0f0;
+//     font-size: 14px;
+//     color: #555;
+//   }
+
+//   tr:hover {
+//     background: #f9f9f9;
+//   }
+// }
+
+// /* ---------------------------
+//    Toolbar Styling
+// ---------------------------- */
+// mat-toolbar {
+//   border-radius: 8px;
+//   margin-bottom: 1rem;
+//   padding: 0 1rem;
+// }
+
+// /* ---------------------------
+//    Material Form Fields
+// ---------------------------- */
+// mat-form-field {
+//   width: 100%;
+//   margin-bottom: 1rem;
+// }
+
+// .mat-mdc-chip {
+//   background-color: #e3f2fd !important;
+//   color: #1565c0 !important;
+//   font-weight: 500;
+// }
+
+// mat-chip-row button {
+//   color: #1565c0 !important;
+// }
+
+// /* ---------------------------
+//    Footer Buttons
+// ---------------------------- */
+// .modal__foot {
+//   padding: 1rem 1.5rem;
+//   display: flex;
+//   justify-content: flex-end;
+//   gap: 1rem;
+//   border-top: 1px solid #e0e0e0;
+
+//   button.btn.secondary {
+//     background: #f5f5f5;
+//     color: #333;
+//     padding: 8px 18px;
+//     border-radius: 6px;
+//     font-weight: 500;
+//     border: 1px solid #ddd;
+//     transition: background 0.2s ease-in-out;
+
+//     &:hover {
+//       background: #e9e9e9;
+//     }
+//   }
+// }
+
+// /* ---------------------------
+//    No Candidates Message
+// ---------------------------- */
+// .no-data {
+//   display: flex;
+//   margin-left: 300px;
+//   gap: 8px;
+//   color: #888;
+//   margin-top: 1rem;
+//   font-size: 14px;
+// }
+
+// /* ---------------------------
+//    Animations
+// ---------------------------- */
+// @keyframes fadeIn {
+//   from { opacity: 0; }
+//   to { opacity: 1; }
+// }
+
+// @keyframes scaleIn {
+//   from {
+//     transform: scale(0.95);
+//     opacity: 0;
+//   }
+//   to {
+//     transform: scale(1);
+//     opacity: 1;
+//   }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// .progress-wrap {
+//   margin: 1rem 0;
+
+//   .progress-text {
+//     display: flex;
+//     gap: 1rem;
+//     font-size: .9rem;
+//     color: #555;
+//     margin-top: .5rem;
+//   }
+
+//   .progress-log {
+//     margin-top: .75rem;
+//     max-height: 180px;
+//     overflow: auto;
+//     border: 1px solid #eee;
+//     border-radius: 8px;
+//     padding: .5rem .75rem;
+//     background: #fafafa;
+
+//     > div {
+//       display: flex;
+//       align-items: flex-start;
+//       gap: .5rem;
+//       padding: .35rem 0;
+//       border-bottom: 1px dashed #eee;
+
+//       &:last-child { border-bottom: none; }
+
+//       &.ok mat-icon { color: #2e7d32; }
+//       &.err mat-icon { color: #c62828; }
+
+//       .msg .line1 { font-weight: 600; }
+//       .msg .line2 { font-size: .85rem; color: #666; }
+//     }
+//   }
+// }
+
+
+// .progress-actions {
+//   margin-top: 12px;
+//   display: flex;
+//   justify-content: flex-end;
+// }
+
+/* ===== Row container: center + wrap nicely ===== */
+.cardWithShadow .mb-3.d-flex.justify-content-between.align-items-center {
+  display: flex;               /* keep flex */
+  flex-wrap: wrap;             /* allow wrapping on small screens */
+  align-items: center;         /* vertical center */
+  justify-content: center;     /* horizontal center */
+  gap: 12px;                   /* consistent spacing */
+}
+
+/* ===== Search field width (first mat-form-field) ===== */
+.cardWithShadow .mb-3 mat-form-field:first-of-type {
+  margin: 0 !important;
+  min-width: 260px;
+  flex: 1 1 380px;             /* grows, but not too big */
+  max-width: 420px;
+}
+
+/* ===== Stage filter field (the narrow one) ===== */
+.cardWithShadow .mb-3 mat-form-field[appearance="outline"] {
+  margin: 0 !important;
+}
+.cardWithShadow .mb-3 mat-form-field[style*="max-width: 250px"] {
+  flex: 0 1 250px;
+  max-width: 250px !important;
+}
+
+/* ===== Primary/flat buttons: consistent height + centering ===== */
+.cardWithShadow .mb-3 button[mat-raised-button],
+.cardWithShadow .mb-3 button[mat-flat-button] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 56px;                /* matches outline mat-form-field */
+  padding-inline: 16px;
+}
+.cardWithShadow .mb-3 button[mat-raised-button] mat-progress-spinner {
+  margin: 0;                   /* keep spinner centered */
+}
+
+/* ===== View toggle (the two icon buttons) ===== */
+.cardWithShadow .mb-3 .d-flex.gap-2.ms-0 {
+  display: inline-flex;        /* fix layout jitter */
+  align-items: center;         /* vertical align center */
+  gap: 8px;                    /* tighter spacing */
+  height: 56px;                /* align to row height */
+}
+.cardWithShadow .mb-3 .d-flex.gap-2.ms-0 button[mat-icon-button] {
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* ===== Responsive: stack fields full-width on small screens ===== */
+@media (max-width: 768px) {
+  .cardWithShadow .mb-3.d-flex.justify-content-between.align-items-center {
+    justify-content: center;   /* keep centered when stacked */
+  }
+  .cardWithShadow .mb-3 mat-form-field:first-of-type,
+  .cardWithShadow .mb-3 mat-form-field[style*="max-width: 250px"] {
+    flex: 1 1 100%;
+    max-width: 100% !important;
+  }
+  .cardWithShadow .mb-3 button[mat-raised-button],
+  .cardWithShadow .mb-3 button[mat-flat-button] {
+    height: 52px;              /* a bit shorter on mobile */
+    width: 100%;               /* optional: make full-width buttons */
+  }
+  .cardWithShadow .mb-3 .d-flex.gap-2.ms-0 {
+    height: 52px;
+  }
+}
+/* One height to rule them all */
+.cardWithShadow .mb-3.d-flex.justify-content-between.align-items-center {
+  --ctrl-h: 56px; /* tweak to 48/52 if you prefer */
+}
+
+/* ========== MAT FORM-FIELD (inputs & selects) ========== */
+.cardWithShadow .mb-3 .mat-mdc-form-field {
+  height: var(--ctrl-h);
+}
+
+/* MDC internals to enforce height */
+.cardWithShadow .mb-3 .mat-mdc-text-field-wrapper {
+  height: var(--ctrl-h);
+  display: flex;
+  align-items: center;
+}
+
+.cardWithShadow .mb-3 .mat-mdc-form-field-flex {
+  height: 100%;
+}
+
+.cardWithShadow .mb-3 .mat-mdc-form-field-infix {
+  min-height: calc(var(--ctrl-h) - 16px); /* leaves room for outline/label */
+  display: flex;
+  align-items: center;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Align the input text vertically */
+.cardWithShadow .mb-3 .mat-mdc-input-element {
+  line-height: 1.2;
+  padding: 0;
+}
+
+/* Align mat-select trigger */
+.cardWithShadow .mb-3 .mat-mdc-select-trigger {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ========== BUTTONS (raised/flat) ========== */
+.cardWithShadow .mb-3 button[mat-raised-button],
+.cardWithShadow .mb-3 button[mat-flat-button] {
+  height: var(--ctrl-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 16px;
+  gap: 8px;
+}
+
+/* Keep spinner centered inside button */
+.cardWithShadow .mb-3 button[mat-raised-button] mat-progress-spinner,
+.cardWithShadow .mb-3 button[mat-flat-button] mat-progress-spinner {
+  margin: 0;
+}
+
+/* ========== ICON BUTTONS (view toggles) ========== */
+.cardWithShadow .mb-3 button[mat-icon-button] {
+  width: var(--ctrl-h);
+  height: var(--ctrl-h);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Optional: make the whole row center-aligned & evenly spaced */
+.cardWithShadow .mb-3.d-flex.justify-content-between.align-items-center {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* center horizontally */
+  gap: 12px;
+}
+
+/* Responsive: full-width fields on small screens */
+@media (max-width: 768px) {
+  .cardWithShadow .mb-3 .mat-mdc-form-field {
+    flex: 1 1 100%;
+  }
+  .cardWithShadow .mb-3 button[mat-raised-button],
+  .cardWithShadow .mb-3 button[mat-flat-button] {
+    width: 100%;
+  }
+}
+/* Works with both legacy and MDC Angular Material tables */
+
+/* Ensure predictable column sizing */
+:host ::ng-deep table.mat-table,
+:host ::ng-deep table.mdc-data-table__table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Center text + vertically middle align */
+:host ::ng-deep .mat-header-cell,
+:host ::ng-deep .mat-cell,
+:host ::ng-deep .mat-mdc-header-cell,
+:host ::ng-deep .mat-mdc-cell {
+  text-align: center !important;
+  vertical-align: middle !important;
+  padding: 8px 12px;
+  /* Prevent long text from breaking layout; tweak as needed */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Optional: consistent row height */
+:host ::ng-deep .mat-row,
+:host ::ng-deep .mat-mdc-row {
+  height: 56px; /* adjust if you prefer tighter/looser rows */
+}
+
+/* Optional: set some helpful widths (tune as desired) */
+:host ::ng-deep th[mat-header-cell]:nth-child(1),
+:host ::ng-deep td[mat-cell]:nth-child(1) {
+  width: 72px; /* S. No */
+}
+:host ::ng-deep th[mat-header-cell][mat-column-candidateName],
+:host ::ng-deep td[mat-cell][mat-column-candidateName] {
+  width: 22%;
+}
+
+:host ::ng-deep td[mat-cell] button[mat-icon-button] {
+  vertical-align: middle;
+}
+
+
+.status-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.status-pill-sent {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-pill-not-sent {
+  background: #ffebee;
+  color: #d32f2f;
+}
+
+/* ========== KANBAN CARD CANDIDATE NAME TRUNCATION ========== */
+.img-task {
+  .d-flex.align-items-start.justify-content-between {
+    min-width: 0;
+  }
+
+  .candidate-info {
+    flex: 1;
+    min-width: 0; 
+    
+    h5 {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px; 
+    }
+
+    .resume-update-message {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 220px;
+    }
+  }
+
+  .d-flex.align-items-start.justify-content-between > button[mat-icon-button] {
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+}
+
+.filter-row {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px 16px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #f9fafb, #f3f4ff);
+  border: 1px solid #e0e7ff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+}
+
+.filter-group {
+  display: contents;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+/* Nice rounded select */
+.mail-status-select {
+  min-width: 170px;
+  padding: 6px 32px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  outline: none;
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease,
+    transform 0.05s ease;
+  appearance: none;
+
+  /* custom arrow */
+  background-image:
+    linear-gradient(45deg, #9ca3af 50%, transparent 50%),
+    linear-gradient(-45deg, #9ca3af 50%, transparent 50%);
+  background-position:
+    calc(100% - 16px) 50%,
+    calc(100% - 10px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.mail-status-select:hover {
+  background-color: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.mail-status-select:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+
+.mail-status-select:active {
+  transform: scale(0.99);
+}
+
+/* Mobile tweaks */
+@media (max-width: 640px) {
+  .filter-row {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .filter-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mail-status-select {
+    width: 55%;
+  }
+}
+
+.candidate-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* VERY IMPORTANT for flex */
+}
+
+.candidate-name-row {
+  display: flex;
+  align-items: center;
+}
+
+.candidate-name {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+
+  white-space: nowrap;      /* ❌ no wrapping */
+  overflow: hidden;         /* hide overflow */
+  text-overflow: ellipsis;  /* show ... if too long */
+  max-width: 220px;         /* adjust per card width */
+}
+
+.candidate-info{
+  display: flex;
+  flex-direction: column;  /* forces message below name */
+}
+
+.resume-update-message{
+  font-size: 12px;
+  color: #2e7d32;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+
+

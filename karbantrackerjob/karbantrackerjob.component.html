@@ -1,0 +1,891 @@
+<mat-card class="cardWithShadow mb-4">
+  <mat-card-content>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <mat-form-field appearance="outline" class="mb-0 mr-2" style="flex: 1; max-width: 400px">
+        <mat-label>Search candidates</mat-label>
+        <input matInput [(ngModel)]="candidateSearchText" placeholder="Search by name, email, or phone" />
+        <button *ngIf="candidateSearchText" matSuffix mat-icon-button (click)="candidateSearchText = ''">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-flat-button color="primary" class="ml-2" [disabled]="loadingAI" (click)="openAICallLauncher()"
+        aria-label="Initiate AI-powered candidate call">
+        <mat-icon *ngIf="!loadingAI">psychology</mat-icon>
+        <mat-progress-spinner *ngIf="loadingAI" diameter="20" mode="indeterminate"
+          color="accent"></mat-progress-spinner>
+        <span class="ml-2">AI Calls</span>
+      </button>
+
+      <button mat-flat-button color="primary" (click)="open()">
+        <mat-icon>mail</mat-icon>
+        Email Broadcast
+      </button>
+
+      <mat-form-field *ngIf="viewMode === 'table'" appearance="outline" class="mb-0" style="flex: 1; max-width: 250px">
+        <mat-label>Filter by Stage</mat-label>
+        <mat-select [(ngModel)]="selectedStageFilter">
+          <mat-option value="">All Stages</mat-option>
+          <mat-option *ngFor="let stage of visibleStages" [value]="stage">{{
+            stage
+            }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="d-flex gap-2 ms-0">
+        <button *ngIf="viewMode === 'kanban'" mat-icon-button color="primary" (click)="viewMode = 'table'"
+          matTooltip="Table View">
+          <mat-icon>table_rows</mat-icon>
+        </button>
+
+        <button *ngIf="viewMode === 'table'" mat-icon-button color="primary" (click)="viewMode = 'kanban'"
+          matTooltip="Kanban View">
+          <mat-icon>view_column</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<div #overlay class="modal-overlay" [hidden]="!showModal" tabindex="-1" role="dialog" [attr.aria-modal]="true"
+  aria-labelledby="modalTitle">
+  <div class="modal-emailbroadcast" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <header class="modal__head">
+      <h2 id="modalTitle" class="modal__title">Send Email Broadcast</h2>
+      <button type="button" class="modal__close" aria-label="Close modal" (click)="close()">
+        ✕
+      </button>
+    </header>
+
+    <section class="modal__body">
+      <app-callloader *ngIf="isloading"></app-callloader>
+      <div *ngIf="showCandidateForm">
+        <form #f="ngForm" novalidate>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label><mat-icon>groups</mat-icon>&nbsp;Select Group</mat-label>
+            <mat-select [(value)]="selectedGroup" (selectionChange)="onGroupChange($event)">
+              <mat-option *ngFor="let g of groups" [value]="g.Groupid">
+                {{ g.GroupName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <div *ngIf="selectedGroupCandidates.length > 0; else noCandidates" class="candidate-table-container">
+
+            <!-- 🔍 Filter row -->
+            <div class="filter-row">
+
+              <div class="filter-group">
+                <label class="filter-label">Mail Status</label>
+                <select [(ngModel)]="mailStatusFilter" [ngModelOptions]="{ standalone: true }"
+                  class="mail-status-select">
+                  <option value="all">All</option>
+                  <option value="sent">Mail Sent</option>
+                  <option value="not">Not Sent</option>
+                </select>
+              </div>
+            </div>
+
+            <table class="candidate-table">
+              <thead>
+                <tr>
+                  <th>
+                    <input type="checkbox" [(ngModel)]="selectAll" [ngModelOptions]="{ standalone: true }"
+                      (change)="toggleAll()" />
+                  </th>
+                  <th>Candidate Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Mail Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- 👇 use filteredGroupCandidates instead of selectedGroupCandidates -->
+                <tr *ngFor="let c of filteredGroupCandidates">
+                  <td>
+                    <input type="checkbox" [(ngModel)]="c.selected" [ngModelOptions]="{ standalone: true }"
+                      (change)="onCandidateSelect(c)" />
+                  </td>
+                  <td>{{ c.firstname }}</td>
+                  <td>{{ c.email }}</td>
+                  <td>{{ c.phonenumber }}</td>
+                  <td>
+                    <span class="status-pill" [ngClass]="
+c.mailSent ? 'status-pill-sent' : 'status-pill-not-sent'
+">
+                      {{ c.mailSent ? "Mail Sent" : "Not Sent" }}
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <ng-template #noCandidates>
+            <p class="no-data">
+              <mat-icon>group</mat-icon> No candidates found for this group.
+            </p>
+          </ng-template>
+
+          <footer class="modal__foot">
+            <button type="button" class="btn secondary" (click)="close()">
+              Cancel
+            </button>
+            <button mat-flat-button color="primary" [disabled]="!hasSelectedCandidates()" (click)="goToEmailForm()">
+              Send Mail
+            </button>
+          </footer>
+        </form>
+      </div>
+
+      <div *ngIf="showEmailForm">
+        <mat-toolbar color="primary" class="mb-4">
+          <span>Compose Email</span>
+          <span style="flex: 1 1 auto"></span>
+          <button mat-icon-button type="button" (click)="onClear()" aria-label="Clear">
+            <mat-icon>delete_sweep</mat-icon>
+          </button>
+          <button mat-raised-button color="accent" type="button" (click)="onSend()" [disabled]="emailForm.invalid">
+            <mat-icon>send</mat-icon>
+            Send
+          </button>
+        </mat-toolbar>
+
+        <form [formGroup]="emailForm" class="grid gap-4">
+          <mat-form-field appearance="outline">
+            <mat-label>To</mat-label>
+            <mat-chip-grid #toChipList formControlName="to">
+              <mat-chip-row *ngFor="let e of emailForm.value.to; let i = index" (removed)="removeEmail('to', i)">
+                {{ e }}
+                <button matChipRemove aria-label="Remove">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              <input placeholder="Add email and press Enter" [matChipInputFor]="toChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeys" (matChipInputTokenEnd)="addFromInput('to', $event)" />
+            </mat-chip-grid>
+            <mat-error *ngIf="emailForm.get('to')?.hasError('required')">At least one recipient is required.</mat-error>
+            <mat-error *ngIf="emailForm.get('to')?.hasError('emailsInvalid')">One or more addresses are
+              invalid.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>CC</mat-label>
+            <mat-chip-grid #ccChipList formControlName="cc">
+              <mat-chip-row *ngFor="let e of emailForm.value.cc; let i = index" (removed)="removeEmail('cc', i)">
+                {{ e }}
+                <button matChipRemove aria-label="Remove">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              <input placeholder="Add email" [matChipInputFor]="ccChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeys" (matChipInputTokenEnd)="addFromInput('cc', $event)" />
+            </mat-chip-grid>
+            <mat-error *ngIf="emailForm.get('cc')?.hasError('emailsInvalid')">One or more addresses are
+              invalid.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>BCC</mat-label>
+            <mat-chip-grid #bccChipList formControlName="bcc">
+              <mat-chip-row *ngFor="let e of emailForm.value.bcc; let i = index" (removed)="removeEmail('bcc', i)">
+                {{ e }}
+                <button matChipRemove aria-label="Remove">
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip-row>
+              <input placeholder="Add email" [matChipInputFor]="bccChipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeys" (matChipInputTokenEnd)="addFromInput('bcc', $event)" />
+            </mat-chip-grid>
+            <mat-error *ngIf="emailForm.get('bcc')?.hasError('emailsInvalid')">One or more addresses are
+              invalid.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Subject</mat-label>
+            <input matInput formControlName="subject" maxlength="200" placeholder="Subject" />
+            <mat-hint align="end">{{ emailForm.get("subject")?.value?.length || 0 }}/200</mat-hint>
+            <mat-error *ngIf="emailForm.get('subject')?.hasError('required')">Subject is required.</mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Note</mat-label>
+            <textarea matInput formControlName="note" rows="6" placeholder="Write your message..."></textarea>
+          </mat-form-field>
+        </form>
+
+        <footer class="modal__foot">
+          <button type="button" class="btn secondary" (click)="backToCandidateForm()">
+            Back
+          </button>
+          <button mat-flat-button color="primary" [disabled]="emailForm.invalid" (click)="onSend()">
+            Send Email
+          </button>
+        </footer>
+      </div>
+    </section>
+
+    <section *ngIf="sending" class="progress-wrap" aria-live="polite">
+      <mat-progress-bar mode="determinate" [value]="progress.percent"></mat-progress-bar>
+
+      <div class="progress-text">
+        <span>{{ progress.percent }}%</span>
+        <span>Sent: {{ progress.sent }}</span>
+        <span>Failed: {{ progress.failed }}</span>
+        <span>Total: {{ progress.total }}</span>
+      </div>
+
+      <div class="progress-log">
+        <div *ngFor="let l of logs; let i = index" [class.ok]="l.status === 'sent'" [class.err]="l.status === 'failed'">
+          <mat-icon aria-hidden="true">
+            {{ l.status === "sent" ? "check_circle" : "error" }}
+          </mat-icon>
+          <div class="msg">
+            <div class="line1">
+              {{ l.status | uppercase }} — {{ l.recipient }}
+            </div>
+            <div class="line2">
+              {{ l.message }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-actions">
+        <button class="btn secondary" type="button" (click)="cancelSend()" [disabled]="!sending">
+          Cancel
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div *ngIf="viewMode === 'kanban'">
+  <mat-card class="cardWithShadow">
+    <mat-card-content>
+      <div class="table-responsive">
+        <div class="task-list-section" cdkDropListGroup>
+          <div class="task-list-container" *ngIf="canSeeStage('Assigned')">
+            <div class="connect-sorting bg-light-yellow">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Assigned</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="candidates" (cdkDropListDropped)="drop($event, 'Candidates')"
+                class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of candidates.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <!-- ==== NEW CODE: move options limited to allowed statuses ==== -->
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+                <div *ngIf="!candidates.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No candidates found for this job.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list-container" *ngIf="canSeeStage('Shortlisted')">
+            <div class="connect-sorting bg-light-orange">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Shortlisted</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="shortlisted" (cdkDropListDropped)="drop($event, 'Shortlisted')"
+                class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of shortlisted.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+
+                <div *ngIf="!shortlisted.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No shortlisted candidates.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list-container" *ngIf="canSeeStage('Submitted')">
+            <div class="connect-sorting bg-light-cyan">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Submitted</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="submitted" (cdkDropListDropped)="drop($event, 'Submitted')"
+                class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of submitted.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Submission Panel" (click)="goToSubmissionPanel(candidate)"
+                      style="padding: 0; margin-left:-11px">
+                      <mat-icon>forward_to_inbox</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+
+                <div *ngIf="!submitted.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No submitted candidates.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list-container" *ngIf="canSeeStage('ScheduledInterview')">
+            <div class="connect-sorting bg-light-teal">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Scheduling Interview</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="scheduledInterview"
+                (cdkDropListDropped)="drop($event, 'ScheduledInterview')" class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of scheduledInterview.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Interview Panel" (click)="goToInterviewPanel(candidate)"
+                      style="padding: 0; margin-left: -11px">
+                      <mat-icon>record_voice_over</mat-icon>
+                    </button>
+                  </div>
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+                <div *ngIf="!scheduledInterview.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No Seheduling Interview.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list-container" *ngIf="canSeeStage('Placed')">
+            <div class="connect-sorting bg-light-success">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Placed</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="placed" (cdkDropListDropped)="drop($event, 'Placed')"
+                class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of placed.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                      <button mat-icon-button aria-label="Placement Panel" (click)="goToPlacementPanel(candidate)"
+                        style="padding: 0; margin-left: -12px">
+                        <mat-icon>assignment_turned_in</mat-icon>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+
+                <div *ngIf="!placed.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No Hired candidates.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="task-list-container" *ngIf="canSeeStage('Onboarding')">
+            <div class="connect-sorting bg-light-primary">
+              <div class="m-b-16">
+                <h5 class="f-s-16 m-b-0 f-w-600">Onboarding</h5>
+              </div>
+              <div cdkDropList [cdkDropListData]="onboarding" (cdkDropListDropped)="drop($event, 'Onboarding')"
+                class="connect-sorting-content">
+                <mat-card *ngFor="
+let candidate of onboarding.filter(matchesSearch);
+trackBy: trackByCandidateId
+" cdkDrag class="cardWithShadow img-task m-b-10 overflow-hidden relative" style="padding: 0">
+                  <div class="d-flex align-items-start justify-content-between" style="padding: 6px 12px">
+                    <div class="candidate-info">
+                      <h5 class="f-s-14 f-w-600">
+                        {{ candidate.firstname }} {{ candidate.lastname }}
+                      </h5>
+                      <div *ngIf="candidate.hasUpdatedResumeForJob" class="resume-update-message">
+                        Updated resume available
+                      </div>
+                    </div>
+                    <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                      <mat-icon>visibility</mat-icon>
+                    </button>
+                    <button mat-icon-button aria-label="Onboard Panel" (click)="goToOnboardpanel(candidate)"
+                      style="padding: 0; margin-left: 4px">
+                      <mat-icon>badge</mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="d-flex align-items-center justify-content-between border-top text-muted f-s-13"
+                    style="padding: 6px 12px">
+                    <div class="d-flex align-items-center gap-1">
+                      <mat-icon [matTooltip]="
+candidate.createdtime | date : 'MM-dd-yyyy'
+" matTooltipPosition="below" matTooltipShowDelay="0">
+                        calendar_today
+                      </mat-icon>
+                      <span>{{ getRelativeTime(candidate.createdtime) }}</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-1">
+                      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More actions">
+                        <mat-icon>more_vert</mat-icon>
+                      </button>
+                    </div>
+
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item [matMenuTriggerFor]="moveMenu">
+                        <mat-icon>swap_horiz</mat-icon>
+                        <span>Move</span>
+                      </button>
+                      <mat-menu #moveMenu="matMenu">
+                        <button mat-menu-item *ngFor="let status of statuses" (click)="moveTo(candidate, status)">
+                          <mat-icon>arrow_right_alt</mat-icon>
+                          <span>{{ status }}</span>
+                        </button>
+                      </mat-menu>
+
+                      <button mat-menu-item (click)="shareCandidate(candidate)">
+                        <mat-icon>share</mat-icon>
+                        <span>Share</span>
+                      </button>
+
+                      <button mat-menu-item (click)="dropCandidate(candidate)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Drop</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </mat-card>
+
+                <div *ngIf="!onboarding.filter(matchesSearch)?.length" class="p-3 text-muted">
+                  No Onboarding candidates.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="viewMode === 'table'">
+  <mat-card class="cardWithShadow">
+    <mat-card-content>
+      <div class="table-responsive">
+        <table mat-table [dataSource]="allCandidates" class="w-100">
+          <ng-container matColumnDef="sno">
+            <th mat-header-cell *matHeaderCellDef>S. No</th>
+            <td mat-cell *matCellDef="let candidate; let i = index">
+              {{ i + 1 }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="candidateName">
+            <th mat-header-cell *matHeaderCellDef>Candidate Name</th>
+            <td mat-cell *matCellDef="let candidate">
+              {{ candidate.firstname }} {{ candidate.lastname }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="currentStage">
+            <th mat-header-cell *matHeaderCellDef>Current Stage</th>
+            <td mat-cell *matCellDef="let candidate">
+              {{ candidate.currentStage }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="dropReason">
+            <th mat-header-cell *matHeaderCellDef>Drop Reason</th>
+            <td mat-cell *matCellDef="let candidate">
+              {{ candidate.applicants?.[0]?.reason || '-' }}
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="newColumn">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let candidate" class="text-center">
+              <button mat-icon-button aria-label="Edit" (click)="
+editCandidate(candidate.candidate_id);
+$event.stopPropagation()
+">
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button mat-icon-button type="button" aria-label="Submission Panel"
+                *ngIf="candidate.currentStage === 'Submitted'" (click)="goToSubmissionPanel(candidate)">
+                <mat-icon>forward_to_inbox</mat-icon>
+              </button>
+              <button mat-icon-button type="button" aria-label="Interview Panel"
+                *ngIf="isScheduledInterview(candidate.currentStage)" (click)="goToInterviewPanel(candidate)"
+                style="padding: 0; margin-left: 4px">
+                <mat-icon>record_voice_over</mat-icon>
+              </button>
+              <button mat-icon-button type="button" aria-label="placement Panel"
+                *ngIf="isPlaced(candidate.currentStage)" (click)="goToPlacementPanel(candidate)"
+                style="padding: 0; margin-left: 4px">
+                <mat-icon>assignment_turned_in</mat-icon>
+              </button>
+              <button mat-icon-button type="button" aria-label="Onboard Panel" *ngIf="isonboard(candidate.currentStage)"
+                (click)="goToOnboardpanel(candidate)" style="padding: 0; margin-left: 4px">
+                <mat-icon>badge</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <ng-container matColumnDef="view">
+            <th mat-header-cell *matHeaderCellDef>View</th>
+            <td mat-cell *matCellDef="let candidate" class="text-center">
+              <button mat-icon-button aria-label="View Details" (click)="
+CandidateDetails(candidate.candidate_id);
+$event.stopPropagation()
+" style="padding: 0">
+                <mat-icon>visibility</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="showStageModal">
+  <div class="backdrop"></div>
+  <div class="modal-card">
+    <h3 class="modal-title">Update Candidate Stage</h3>
+    <mat-form-field appearance="outline" class="dropdown-field">
+      <mat-label>Stage</mat-label>
+      <mat-select [(value)]="selectedStage" aria-label="Select Candidate Stage">
+        <mat-option *ngFor="let stage of statuses" [value]="stage">
+          {{ stage }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <div class="actions">
+      <button mat-stroked-button color="basic" (click)="closeStageModal()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" (click)="confirmStageUpdate()">
+        Update
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="showDropReasonModal">
+  <div class="backdrop"></div>
+  <div class="modal-card">
+    <h3 class="modal-title">Reason for Dropping</h3>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Drop Reason</mat-label>
+      <textarea matInput [(ngModel)]="dropReason" rows="3" placeholder="Enter reason"></textarea>
+    </mat-form-field>
+    <div class="actions">
+      <button mat-stroked-button color="basic" (click)="closeDropReasonModal()">
+        Cancel
+      </button>
+      <button mat-raised-button color="warn" [disabled]="!dropReason" (click)="confirmDrop()">
+        Drop
+      </button>
+    </div>
+  </div>
+</div>
+<ng-template #dateDialogTemplate>
+  <h2 mat-dialog-title>{{ dialogTitle }}</h2>
+  <mat-dialog-content>
+    <mat-form-field appearance="fill" class="w-100">
+      <mat-label>Select Date</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="dialogRef?.close()">Cancel</button>
+    <button mat-button color="primary" (click)="dialogRef?.close(selectedDate)">
+      OK
+    </button>
+  </mat-dialog-actions>
+</ng-template>
+<div *ngIf="showReasonModal">
+  <div class="backdrop"></div>
+  <div class="modal-card">
+    <h3 class="modal-title">{{ reasonTitle }}</h3>
+    <mat-form-field appearance="outline" class="w-100">
+      <mat-label>Reason</mat-label>
+      <textarea matInput [(ngModel)]="reasonText" rows="3" placeholder="Enter reason"></textarea>
+    </mat-form-field>
+    <div class="actions">
+      <button mat-stroked-button color="basic" (click)="closeReasonModal()">
+        Cancel
+      </button>
+      <button mat-raised-button color="primary" [disabled]="!reasonText" (click)="confirmReason()">
+        Confirm
+      </button>
+    </div>
+  </div>
+</div>
