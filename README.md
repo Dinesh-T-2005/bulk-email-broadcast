@@ -183,15 +183,15 @@ Optional review screen showing:
 
 ### Candidate Selection
 
-![Candidate Selection](./screenshots/candidate-selection.png)
+![Candidate Selection](./email/pic2.png)
 
 ### Email Composer
 
-![Email Composer](./screenshots/email-composer.png)
+![Email Composer](./email/pic3.png)
 
 ### Broadcast Preview
 
-![Broadcast Preview](./screenshots/broadcast-preview.png)
+![Broadcast Preview](./email/pic4.png)
 
 > Create a folder named **`screenshots`** in the repo root and add your screenshots using these names:
 
